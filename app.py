@@ -48,7 +48,7 @@ def get_tracks():
     tracks = os.listdir(DOWNLOAD_FOLDER)
     tracks_list = []
     for i in tracks:
-        name = i.replace('.webm','').replace('mp4', '')
+        name = i.replace('.webm','').replace('.m4a','').replace('.mp4','')
         tracks_list.append(name)
     
     
@@ -58,7 +58,7 @@ def get_tracks():
 @app.route("/stream/<path:filename>", methods=['GET'])
 def stream(filename):
     filepath = os.path.join(DOWNLOAD_FOLDER, filename)
-    return send_file(filepath,mimetype='audio/webm')
+    return send_file(filepath,mimetype='audio/mp4')
 
 
 @app.route('/delete', methods=['DELETE'])
