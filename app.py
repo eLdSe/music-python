@@ -58,9 +58,14 @@ def get_tracks():
     
 @app.route("/stream/<path:filename>", methods=['GET'])
 def stream(filename):
-    filepath = os.path.join(DOWNLOAD_FOLDER, filename)
-    return send_file(filepath,mimetype='audio/mp4')
-
+    base_name = filename.rsplit('.', 1)[0]
+    
+    for ext in ['m4a', 'webm', 'mp4']:
+        filepath = os.path.join(DOWNLOAD_FOLDER, f"{base_name}.{ext}")
+        if os.path.exists(filepath):
+            return send_file(filepath, mimetype='audio/mp4')
+    
+    return jsonify({'error': 'file not found'}), 404
 
 @app.route('/delete', methods=['DELETE'])
 def delete_track():
