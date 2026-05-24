@@ -8,6 +8,11 @@ app = Flask(__name__)
 DOWNLOAD_FOLDER = "downloads"
 os.makedirs(DOWNLOAD_FOLDER, exist_ok=True)
 
+@app.route("/")
+def home():
+    return "Server is running"
+
+
 @app.route('/download', methods=['POST'])
 def download():
     data = request.get_json()
