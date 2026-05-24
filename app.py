@@ -1,6 +1,7 @@
 from flask import Flask, jsonify, send_file, request
 import yt_dlp
 import os
+import traceback
 
 
 app = Flask(__name__)
@@ -18,17 +19,22 @@ def download():
     data = request.get_json()
     url = data.get('url')
 
-    ydl_opts = {
-        'format': 'bestaudio[ext=m4a]/bestaudio/best',
-        'outtmpl': f'{DOWNLOAD_FOLDER}/%(title)s.%(ext)s',
-    }
+    try:
+            
+        ydl_opts = {
+            'format': 'bestaudio[ext=m4a]/bestaudio/best',
+            'outtmpl': f'{DOWNLOAD_FOLDER}/%(title)s.%(ext)s',
+        }
 
-    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-        info = ydl.extract_info(url, download=True)
-        filename = os.path.basename(ydl.prepare_filename(info))
+        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+            info = ydl.extract_info(url, download=True)
+            filename = os.path.basename(ydl.prepare_filename(info))
 
-    return jsonify({'filename': filename, 'status': 'ok'})
-
+        return jsonify({'filename': filename, 'status': 'ok'})
+    except Exception as e:
+        print(traceback.format_exc())
+        return {'error':str(e)},500
+        
 
 
 @app.route('/info', methods=['POST'])
