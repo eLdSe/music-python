@@ -10,6 +10,7 @@ os.makedirs(DOWNLOAD_FOLDER, exist_ok=True)
 
 @app.route('/download', methods=['POST'])
 def download():
+    
     data = request.get_json()
     url = data.get('url')
 
