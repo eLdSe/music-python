@@ -61,6 +61,19 @@ def stream(filename):
     return send_file(filepath,mimetype='audio/webm')
 
 
+@app.route('/delete', methods=['DELETE'])
+def delete_track():
+    data = request.get_json()
+    filename = data.get('filename')
+    filepath = os.path.join(DOWNLOAD_FOLDER, filename)
+    
+    if os.path.exists(filepath):
+        os.remove(filepath)
+        return jsonify({'message': 'deleted'})
+    
+    return jsonify({'error': 'file not found'}), 404
+
+
 
 
 if __name__ == '__main__':
