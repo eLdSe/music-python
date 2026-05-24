@@ -10,7 +10,6 @@ os.makedirs(DOWNLOAD_FOLDER, exist_ok=True)
 
 @app.route('/download', methods=['POST'])
 def download():
-    
     data = request.get_json()
     url = data.get('url')
 
@@ -21,9 +20,10 @@ def download():
 
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         info = ydl.extract_info(url, download=True)
-        filename = ydl.prepare_filename(info)
+        filename = os.path.basename(ydl.prepare_filename(info))
 
-    return send_file(filename, as_attachment=True)
+    return jsonify({'filename': filename, 'status': 'ok'})
+
 
 
 @app.route('/info', methods=['POST'])
